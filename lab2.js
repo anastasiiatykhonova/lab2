@@ -75,16 +75,16 @@ document.querySelector(".submit2").onclick = function () {
     alert(filledOutFields);
 }
 
+//ООП
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-//ООП
-
-//Создаем основной класс
+//Создаем класс Car - шаблон для создания объектов car и их методов
 let Car = function () {
 
-    // Обявляем публичные свойства
+    // Обявляем свойства объекта car
     this.x = getRandomInt(window.innerWidth);
     this.y = getRandomInt(window.innerHeight);
     this.id = 'id' + getRandomInt(1000);
@@ -101,7 +101,8 @@ let Car = function () {
     // Вставляем сгенерированый код в body
     document.querySelector('body').insertAdjacentHTML('beforeend', CarHTML);
 
-    //Задаем выполнение метода move в заданом интервале
+    //Задаем выполнение метода move в заданом интервале.
+    //Метод - это функция, сохраненная в объекте, как свойство
     this.timerId = setInterval(function () {
         that.move();
     }, 2000);
@@ -112,28 +113,27 @@ let Car = function () {
         document.querySelector('#' + this.id).style.top = getRandomInt(window.innerHeight) + 'px';
     }
 
-    // Вешаем вызов деструктора на событие клика мышкой по машине
+    // Вешаем вызов деструктора на событие onclick мышкой по машинке
     document.querySelector('#' + this.id).onclick = function () {
         that.destructor();
     };
     alert(`car ${this.id} created!`);
 };
 
-//Обявляем публичный метод в прототипном стиле
+//Обявляем метод в прототипном стиле и удаляем HTML обьект машинки
 Car.prototype.destructor = function () {
-    //Этот метод останавливает обявленый для этого обекта setInterval (timerId мы сохранили предварительно в свойство)
     clearInterval(this.timerId);
-    //Удаляем HTML обьект машинки
     document.querySelector('#' + this.id).remove();
     alert(`car ${this.id} deleted!`);
 }
 
+// Создаем дочерний объект CarBlue путем вызова родительского конструктора
 let CarBlue = function () {
-    // Вызываем родительский конструктор
     Car.call(this);
-    //Выполняем код, отличный от родительского конструктора, а именно добавляем к созданному обекту дополнительный класс
+    //Добавляем к созданному дочернему обекту дополнительный класс
     document.querySelector('#' + this.id).classList.add('blue');
 }
+
 // Создаем новую машину по событию onclick на кнопку
 document.querySelector('.newCar').onclick = function () {
     new Car();
@@ -142,6 +142,7 @@ document.querySelector('.newCar').onclick = function () {
 document.querySelector('.newCarBlue').onclick = function () {
     new CarBlue();
 }
+
 // В прототип Синей машины записываем родительский прототип
 CarBlue.prototype = Object.create(Car.prototype);
 // Указываем правильный конструктор наследуемого прототипа
